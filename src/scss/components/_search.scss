@@ -1,0 +1,41 @@
+.search {
+    @include flex-center-align;
+}
+
+.form {
+    &__group {
+        position: relative;
+    }
+
+    &__label {
+        position: absolute;
+        left: 1rem;
+        top: 5px;
+        font-size: 1.6rem;
+        transition: all .3s ease-in-out;
+        backface-visibility: hidden;
+    }
+
+    &__input {
+        font-family: "Montserrat";
+        font-size: 1.6rem;
+        padding: .5rem 1rem;
+        margin-right: 2.5rem;
+        border: none;
+        border-bottom: 1px solid $color-background;
+        transition: all .5s;
+        
+        &:focus {
+            border-bottom: 1px solid $color-main;
+            outline: none;
+        }
+    }
+}
+
+.move-up {
+    transform: translateY(-2rem) 
+               translateX(-.5rem) 
+               scale(.8);
+    color: $color-main;
+    backface-visibility: hidden;
+}

@@ -1,0 +1,19 @@
+.btn {
+    font-family: "Montserrat";
+    font-size: 1.6rem;
+    border: none;
+    background: $color-white;
+    border-bottom: 1px solid $color-background;
+    padding: .5rem 1rem;
+    transition: all .5s;
+    cursor: pointer;
+      
+    &:hover {
+        border-bottom: 1px solid $color-main;
+        color: $color-main;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}

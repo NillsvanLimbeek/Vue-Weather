@@ -1,0 +1,5 @@
+.app {
+    @include flex-center-align;
+    height: 100vh;
+    background: $color-background;
+}
