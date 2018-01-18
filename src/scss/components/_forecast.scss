@@ -1,0 +1,12 @@
+.forecast {
+    @include flex-space-around;
+    padding: 1rem;
+
+    &__first,
+    &__second,
+    &__third {
+        width: 90px;
+        height: 90px;
+        border: 1px solid $color-background;
+    }
+}
