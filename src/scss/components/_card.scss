@@ -8,7 +8,7 @@
 
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 15% 25% 35% 25%;
+    grid-template-rows: 1fr 2fr 3fr 2fr;
 }
 
 .card > div {
