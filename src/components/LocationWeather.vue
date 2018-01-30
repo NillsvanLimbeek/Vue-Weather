@@ -1,7 +1,8 @@
 <template>
     <div class="location">
         <div class="location__icon">
-            <img src="../../img/Sun.png" alt="Sunny">
+            <!-- <img :src="`../../img/${weather_icon}.png`"> -->
+            <img :src="`https://raw.githubusercontent.com/NillsvanLimbeek/nillsvanlimbeek.github.io/master/vue-weather/img/${weather_icon}.png`">
         </div>
 
         <div class="location__text">
@@ -13,27 +14,27 @@
 
 <script>
     import { EventBus } from "../main.js";
+    import { WeatherIcons } from "../functions.js";
 
     export default {
         data() {
             return {
                 city: "",
+                weather_icon: "",
                 weather: "",
                 country: ""
             }
         },
-        methods: {
-            updateText() {
-                this.city = EventBus.city.display_location.city;
-                this.country = EventBus.city.display_location.country;
-                this.weather = EventBus.city.weather;
-            }
-        },
         created() {
-            EventBus.$on("updateText", (city) => {
-                this.city = city.city.name;
-                this.country = city.city.country;
-                this.weather = city.list[0].weather[0].main;
+            //Init WeatherIcons
+            const icons = new WeatherIcons;
+
+            EventBus.$on("updateText", (data) => {
+                //Set Weather, City & Country
+                this.city = data.city.city;
+                this.country = data.city.country;
+                this.weather = data.weather.current_observation.weather;
+                this.weather_icon = icons.weatherIcons(data.weather.current_observation.icon);
             })
         }
     }

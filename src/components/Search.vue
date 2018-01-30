@@ -13,7 +13,6 @@
                        @focus="moveLabelUp(), delaySearchBox()"
                        @blur="moveLabelDown(), delaySearchBox()"
                        v-model="search">
-                <button class="btn">Submit</button>
             </div>
             <div class="form__search-results">
                 <ul class="form__list">
@@ -38,15 +37,17 @@
                 moveLabel: false,
                 showSearch: false,
                 search: "",
-                weather_api_key: "84037bef8eeebfca",
+                wunderground_api_key: "84037bef8eeebfca",
                 openweather_api_key: "514c62a8b94b2c6d80b782d24bd06107",
                 searchResult: []
             }
         },
         methods: {
+            //Move Label on Focus
             moveLabelUp() {
                 this.moveLabel = true;
             },
+            //Move Label on Blur
             moveLabelDown() {
                 if(this.search.length > 0) {
                     this.moveLabel = true;
@@ -57,18 +58,34 @@
             getData(index) {
                 const city = this.searchResult[index].name;
                 const country = this.searchResult[index].countryName;
+                const countryCode = this.searchResult[index].countryCode;
+                const lat = this.searchResult[index].lat;
+                const long = this.searchResult[index].lng;
 
-                axios.get(`http://api.openweathermap.org/data/2.5/forecast?id=524901&APPID=${this.openweather_api_key}&q=${city},${country}`)
-                    .then(response => {
-                        const city = response.data;
-                        EventBus.$emit("updateText", city);
-                        console.log(city);
-                    })
+                axios.all([
+                    //Get Forecast & Weather
+                    axios.get(`https://cors-anywhere.herokuapp.com/api.wunderground.com/api/84037bef8eeebfca/conditions/forecast/q/${lat},${long}.json`),
+                    //Get Local Date & Time
+                    axios.get(`https://cors-anywhere.herokuapp.com/api.geonames.org/timezoneJSON?lat=${lat}&lng=${long}&username=serc`)
+                ])
+                .then(axios.spread((weatherResponse, dateResponse) => {
+                    const data = {
+                        weather: weatherResponse.data,
+                        date: dateResponse.data,
+                        city: {
+                            city: city,
+                            country: countryCode
+                        }
+                    }
+                    EventBus.$emit("updateText", data);
+                    console.log(data);
+                }));
+
             },
             getSearchData() {
                 this.searchResult = [];
-
-                axios.get(`http://api.geonames.org/searchJSON?name=${this.search}&maxRows=10&username=serc`)
+                //Get List of Cities
+                axios.get(`https://cors-anywhere.herokuapp.com/api.geonames.org/searchJSON?name=${this.search}&maxRows=10&username=serc`)
                     .then(response => {
                         const data = response.data.geonames;
                         for(let key in data) {
@@ -77,9 +94,11 @@
                     })
                     .catch(error => console.log(error));
             },
+            //Show List on Input
             showSearchBox() {
                 this.showSearch = !this.showSearch;
             },
+            //Delay List
             delaySearchBox() {
                 setTimeout(this.showSearchBox, 250);
             }

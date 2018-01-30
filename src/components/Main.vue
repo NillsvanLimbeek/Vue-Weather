@@ -6,6 +6,17 @@
         </div>
 
         <div class="main__right">
+            <div class="main__text">
+                <p class="paragraph">Humidity:</p>
+                <p class="paragraph">Wind:</p>
+                <p class="paragraph">Pressure:</p>
+            </div>
+
+            <div class="main__values">
+              <p class="paragraph paragraph--thick"> {{ humidity }}</p>
+              <p class="paragraph paragraph--thick"> {{ windSpeed }} km/h</p>
+              <p class="paragraph paragraph--thick"> {{ pressure }} hPa</p>
+            </div>
         </div>
     </div>
 </template>
@@ -16,62 +27,61 @@
     export default {
         data() {
             return {
+                showMain: false,
                 day: "",
                 time: "",
-                temperature: ""
-            }
-        },
-        methods: {
-            getTime() {                
-                //Get date
-                const today = new Date();
-                //Get hours & minutes
-                let hours = today.getHours();
-                let minutes = today.getMinutes();
-                let seconds = today.getSeconds();
-                //Add 0 in front
-                if(minutes < 10) {
-                    minutes = `0${minutes}`
-                    this.time = `${hours}:${minutes}`;
-                } else {
-                    this.time = `${hours}:${minutes}`;
-                }
-                //Keep updating the time
-                setTimeout(this.getTime, 10000);
+                temperature: "",
+                humidity: "",
+                windSpeed: "",
+                pressure: ""
+
             }
         },
         created() {
-            this.getTime();
-            EventBus.$on("updateText", (city) => {
-                //Set Temperature
-                const temp = city.list[0].main.temp - 273;
+            EventBus.$on("updateText", (data) => {
+                //Show Main
+                this.showMain = true;                
+                // Set Temperature
+                const temp = data.weather.current_observation.temp_c;
                 this.temperature = temp.toFixed(0);
-                //Set Day
-                // const day = city.local_time_rfc822.slice(0, 3);
-                // switch(day) {
-                //     case "Mon":
-                //         this.day = "Monday";
-                //         break; 
-                //     case "Tue":
-                //         this.day = "Tuesday";
-                //         break; 
-                //     case 3:
-                //         this.day = "Wednesday";
-                //         break; 
-                //     case 4:
-                //         this.day = "Thursday";
-                //         break; 
-                //     case 5:
-                //         this.day = "Friday";
-                //         break; 
-                //     case 6:
-                //         this.day = "Saturday";
-                //         break; 
-                //     case 7:
-                //         this.day = "Sunday";
-                //         break; 
-                // }
-                //Set Time
+                // Set Day
+                const day = new Date(data.date.time).toString().slice(0, 3);
+
+                switch(day) {
+                    case "Mon":
+                        this.day = "Monday";
+                        break; 
+                    case "Tue":
+                        this.day = "Tuesday";
+                        break; 
+                    case "Wed":
+                        this.day = "Wednesday";
+                        break; 
+                    case "Thu":
+                        this.day = "Thursday";
+                        break; 
+                    case "Fri":
+                        this.day = "Friday";
+                        break; 
+                    case "Sat":
+                        this.day = "Saturday";
+                        break; 
+                    case "Sun":
+                        this.day = "Sunday";
+                        break; 
+                }
+                // Set Time
+                const time = data.date.time;
+                const hours = time.toString().slice(11, 13);
+                const minutes = time.toString().slice(14, 16);
+                this.time = `${hours}:${minutes}`;
+                // Set Wind
+                this.windSpeed = data.weather.current_observation.wind_gust_kph;
+                // Set Humidity
+                this.humidity = data.weather.current_observation.relative_humidity;
+                // Set Pressure
+                this.pressure = data.weather.current_observation.pressure_mb;
+
             })
         }
     }

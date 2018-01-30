@@ -19,3 +19,21 @@ html {
     font-weight: 400;
     letter-spacing: 1px;   
 }
+
+.paragraph {
+    font-size: 1.5rem;
+
+    &--thick {
+        font-weight: 600;
+        margin-left: 1rem;
+    }
+
+    &--center {
+        text-align: center;
+        margin-bottom: 0 !important;
+    }
+
+    &:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+}

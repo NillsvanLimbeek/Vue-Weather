@@ -1,0 +1,10 @@
+.overlay {
+    @include flex-center-align;
+    position: absolute;
+    z-index: 5;
+    background: $color-white;
+    width: 39rem;
+    height: 50rem;
+    top: 9rem;
+    left: .75rem;
+}

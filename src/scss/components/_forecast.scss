@@ -1,12 +1,11 @@
 .forecast {
     @include flex-space-around;
-    padding: 1rem;
+    position: relative;
+    padding: 3rem 0;
 
-    &__first,
-    &__second,
-    &__third {
-        width: 90px;
-        height: 90px;
-        border: 1px solid $color-background;
+    &__weather-icon {
+        width: 60%;
+        display: block;
+        margin: 0 auto;
     }
 }
